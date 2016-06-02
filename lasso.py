@@ -34,7 +34,7 @@ def proximal(A, x,  b, ratio, base_lr, iters):
     for it in range(iters):
         history_x.append(x)
         lr = base_lr
-        # lr = 100 * base_lr / (1 + it)
+        # lr = 50 * base_lr / (1 + it)
         # print "lr: ", lr
         # calculate loss
         # print A[0][0], " * ", x[0][0], " + ", b[0][0]
@@ -67,6 +67,7 @@ def subgradient(A, x, b, ratio, base_lr, iters):
         history_fx.append(fx)
         # print "iter: ", it, " fx: ", fx
         # print fx
+        # lr = 5 * base_lr / (1 + it)
         lr = base_lr
         AT = A.transpose()
         x = x - lr * (AT * (A * x - b) + ratio * np.sign(x))
@@ -85,7 +86,8 @@ def sgd(A, x, b, ratio, base_lr, iters):
         history_fx.append(fx)
         # print "iter: ", it, " fx: ", fx
         # print fx
-        lr = base_lr
+        lr = 10 * base_lr / (1 + it)
+        # lr = base_lr
         sample = np.random.randint(A.shape[0])
         A1 = A[sample, :]
         b1 = b[sample]
@@ -147,7 +149,7 @@ def main():
     init_x = np.asmatrix(np.random.rand(row_dim, 1))
     b = np.asmatrix(np.random.rand(col_dim, 1))
     # A = np.asmatrix(np.array([1]))
-    # init_x = np.asmatrix(np.array([100]))
+    # init_x = np.asmatrix(np.array([1]))
     # b = np.asmatrix(np.array([1]))
     print "A:"
     print A
@@ -157,12 +159,16 @@ def main():
     print init_x
     solve = proximal
     [proximal_x,  proximal_fx] = solve(A, init_x, b, ratio, lr, iters)
+    print "proximal, x: ", proximal_x[-1], "fx: ", proximal_fx[-1]
     solve = admm
     [admm_x,  admm_fx] = solve(A, init_x, b, ratio, lr, iters)
+    print "admm, x: ", admm_x[-1], "fx: ", admm_fx[-1]
     solve = subgradient
     [subgradient_x,  subgradient_fx] = solve(A, init_x, b, ratio, lr, iters)
+    print "subgradient, x: ", subgradient_x[-1], "fx: ", subgradient_fx[-1]
     solve = sgd
     [sgd_x,  sgd_fx] = solve(A, init_x, b, ratio, lr, iters)
+    print "sgd, x: ", sgd_x[-1], "fx: ", sgd_fx[-1]
     
     print np.asarray(proximal_x).shape
     print np.asarray(proximal_fx).shape
