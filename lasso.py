@@ -37,11 +37,18 @@ def proximal(A, x,  b, ratio, base_lr, iters):
         # lr = 50 * base_lr / (1 + it)
         # print "lr: ", lr
         # calculate loss
-        # print A[0][0], " * ", x[0][0], " + ", b[0][0]
         a = A * x - b
+        # print "a"
+        # print a
+        # print "type of a: ", type(a)
+        # c = a[0][0]
+        # print "type of c: ", type(b)
+        # print "c: ", c
         least_square = np.sum(np.multiply(a, a)) 
         l1 = np.sum(np.fabs(x))
         fx = 0.5 * least_square + ratio * l1
+        # print fx
+        # sys.exit()
         history_fx.append(fx)
         # print "iter: ", it, " fx: ", fx
         # print fx
@@ -86,8 +93,8 @@ def sgd(A, x, b, ratio, base_lr, iters):
         history_fx.append(fx)
         # print "iter: ", it, " fx: ", fx
         # print fx
-        lr = 10 * base_lr / (1 + it)
-        # lr = base_lr
+        # lr = 10 * base_lr / (1 + it)
+        lr = base_lr
         sample = np.random.randint(A.shape[0])
         A1 = A[sample, :]
         b1 = b[sample]
@@ -145,6 +152,9 @@ def main():
     ratio = args.ratio
     lr = args.lr
     iters = args.iters
+    # A = np.asmatrix(np.random.rand(col_dim, row_dim).astype(np.float64))
+    # init_x = np.asmatrix(np.random.rand(row_dim, 1).astype(np.float64))
+    # b = np.asmatrix(np.random.rand(col_dim, 1).astype(np.float64))
     A = np.asmatrix(np.random.rand(col_dim, row_dim))
     init_x = np.asmatrix(np.random.rand(row_dim, 1))
     b = np.asmatrix(np.random.rand(col_dim, 1))
@@ -172,10 +182,6 @@ def main():
     
     print np.asarray(proximal_x).shape
     print np.asarray(proximal_fx).shape
-    # proximal_history = np.hstack((np.asarray(proximal_x), np.asarray(proximal_fx)))
-    # admm_history = np.hstack((np.asarray(admm_x), np.asarray(admm_fx)))
-    # sgd_history = np.hstack((np.asarray(sgd_x), np.asarray(sgd_fx)))
-    # subgradient_history = np.hstack((np.asarray(subgradient_x), np.asarray(subgradient_fx)))
 
     np.savetxt("proximal", proximal_fx, fmt = "%f")
     np.savetxt("admm", admm_fx, fmt = "%f")
